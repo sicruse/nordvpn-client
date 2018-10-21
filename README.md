@@ -1,4 +1,4 @@
-[![logo](https://github.com/bubuntux/nordvpn/raw/master/NordVpn_logo.png)](https://ref.nordvpn.com/?id=171828599)
+![NordVPN + Docker](banner.png "NordVPN + Docker")
 
 # NordVPN
 
@@ -21,7 +21,7 @@ This container was designed to be started first to provide a connection to other
     docker run -ti --cap-add=NET_ADMIN --device /dev/net/tun --name vpn\
                 -e USER=user@email.com -e PASS=password
                 -e COUNRTY="country1;country2" -e CATEGORY=category1;category2 \
-                -e PROTOCOL=protocol -d bubuntux/nordvpn
+                -e PROTOCOL=protocol -d mkarpusiewicz/nordvpn
 
 Once it's up other containers can be started using it's network connection:
 
@@ -37,11 +37,11 @@ The environment variable NETWORK must be your local network that you would conne
 
     docker run -ti --cap-add=NET_ADMIN --device /dev/net/tun --name vpn \
                 -p 8080:80 -e NETWORK=192.168.1.0/24 \ 
-                -e USER=user@email.com -e PASS=password -d bubuntux/nordvpn                
+                -e USER=user@email.com -e PASS=password -d mkarpusiewicz/nordvpn                
 
 Now just create the second container _without_ the `-p` parameter, only inlcude the `--net=container:vpn`, the port should be declare in the vpn container.
 
-    docker run -ti --rm --net=container:vpn -d bubuntux/riot-web
+    docker run -ti --rm --net=container:vpn -d DOCKER_CONTAINER
 
 now the service provided by the second container would be available from the host machine (http://localhost:8080) or anywhere inside the local network (http://192.168.1.xxx:8080).
 
@@ -87,4 +87,4 @@ For multiple services (non-existant 'foo' used as an example):
 
 ## Issues
 
-If you have any problems with or questions about this image, please contact me through a [GitHub issue](https://github.com/bubuntux/nordvpn/issues).
+If you have any problems with or questions about this image, please contact me through a [GitHub issue](https://github.com/mkarpusiewicz/nordvpn-docker/issues).
