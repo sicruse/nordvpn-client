@@ -11,7 +11,12 @@ services:
       - "/dev/net/tun"
     stdin_open: true
     tty: true
-    env_file: .env
+    secrets:
+       - nordvpn-auth
     environment:
       COUNTRY: Poland
       PROTOCOL: openvpn_udp
+
+secrets:
+  nordvpn-auth:
+    external: true

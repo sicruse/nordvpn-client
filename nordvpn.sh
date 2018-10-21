@@ -1,5 +1,31 @@
 #!/bin/bash
 
+# Initialization
+base_dir="/vpn"
+ovpn_dir="$base_dir/ovpn"
+auth_file="$base_dir/auth"
+
+# Check for auth details
+if [ -r /run/secrets/nordvpn-auth ] ; then
+    echo "Secret /run/secrets/nordvpn-auth found, using it as openvpn auth file"
+    auth_file="/run/secrets/nordvpn-auth"
+else
+    echo "Secret /run/secrets/nordvpn-auth not found, reverting to environment variables"
+    if [[ -v VPN_USER ]] && [[ -v VPN_PASS ]] ; then
+        # Create auth_file
+        echo "$VPN_USER" > $auth_file 
+        echo "$VPN_PASS" >> $auth_file
+        chmod 0600 $auth_file
+
+        echo "Environment variables VPN_USER and VPN_PASS were found and used as openvpn auth data"
+    else
+        echo "Environment variables VPN_USER and VPN_PASS not found"
+
+        (>&2 echo "ABORTING. You have to specify nordvpn-auth secret or VPN_USER and VPN_PASS environment variables")
+        exit 1
+    fi
+fi
+
 # Firewall everything has to go through the vpn
 iptables  -F OUTPUT
 ip6tables -F OUTPUT 2> /dev/null
@@ -35,10 +61,6 @@ if [ ! -z $NETWORK6 ]; then
     ip -6 route add to $NETWORK6 via $gw dev eth0
     ip6tables -A OUTPUT --destination $NETWORK6 -j ACCEPT 2> /dev/null
 fi
-
-base_dir="/vpn"
-ovpn_dir="$base_dir/ovpn"
-auth_file="$base_dir/auth"
 
 if [ `ls -A $ovpn_dir | wc -l` -eq 0 ]
 then
@@ -179,11 +201,6 @@ if [ -z $config ]; then
     echo "List of recommended servers is empty or configs not found. Select random server from available configs."
     config="${ovpn_dir}/`ls ${ovpn_dir} | shuf -n 1`"
 fi
-
-# Create auth_file
-echo "$USER" > $auth_file 
-echo "$PASS" >> $auth_file
-chmod 0600 $auth_file
 
 openvpn --cd $base_dir --config $config \
     --auth-user-pass $auth_file --auth-nocache \
