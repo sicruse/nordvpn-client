@@ -2,12 +2,12 @@ FROM alpine
 
 LABEL maintainer="Maciej Karpusiewicz <maciej.karpusiewicz@outlook.com>"
 
+VOLUME ["/vpn/ovpn/"]
+
 RUN apk --no-cache --no-progress update && \
     apk --no-cache --no-progress upgrade && \
     apk --no-cache --no-progress add bash curl unzip iptables ip6tables jq openvpn tini && \
     mkdir -p /vpn/ovpn/
-
-VOLUME ["/vpn/ovpn/"] 
 
 ENV URL_NORDVPN_API="https://api.nordvpn.com/server" \
     URL_RECOMMENDED_SERVERS="https://nordvpn.com/wp-admin/admin-ajax.php?action=servers_recommendations" \

@@ -1,0 +1,17 @@
+version: "3.1"
+
+services:
+  vpn:
+    build: .
+    image: mkarpusiewicz/nordvpn-client:local
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - "/dev/net/tun"
+    stdin_open: true
+    tty: true
+    env_file: .env
+    environment:
+      COUNTRY: Poland
+      PROTOCOL: openvpn_udp

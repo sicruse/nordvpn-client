@@ -1,4 +1,7 @@
 .git
+.gitignore
+.env
+docker-compose.yml
 LICENSE
 README.md
-logo.png
+banner.png
