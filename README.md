@@ -19,13 +19,36 @@ This container was designed to be started first to provide a connection to other
 ## Starting an NordVPN instance
 
     docker run -ti --cap-add=NET_ADMIN --device /dev/net/tun --name vpn\
-                -e USER=user@email.com -e PASS=password
+                -e VPN_USER=user@email.com -e VPN_PASS=password
                 -e COUNRTY="country1;country2" -e CATEGORY=category1;category2 \
                 -e PROTOCOL=protocol -d mkarpusiewicz/nordvpn-client
 
 Once it's up other containers can be started using it's network connection:
 
     docker run -it --net=container:vpn -d some/docker-container
+
+## Passing VPN credentials
+
+### Secrets (docker stack/swarm or docker-compose)
+Set up secret in docker-compose.yml or in docker engine with name `nordvpn-auth`
+The file should containe OpenVPN auth file credentials (first line user, second line password)
+
+    user@email.com 
+    password
+
+### Environment variables
+docker run
+
+    -e VPN_USER=user@email.com -e VPN_PASS=password
+
+or env file
+
+    --env-file .env
+
+.env
+
+    VPN_USER=user@email.com 
+    VPN_PASS=password
 
 ## Filter NordVPN servers
 
@@ -37,7 +60,7 @@ The environment variable NETWORK must be your local network that you would conne
 
     docker run -ti --cap-add=NET_ADMIN --device /dev/net/tun --name vpn \
                 -p 8080:80 -e NETWORK=192.168.1.0/24 \ 
-                -e USER=user@email.com -e PASS=password -d mkarpusiewicz/nordvpn-client                
+                -e VPN_USER=user@email.com -e VPN_PASS=password -d mkarpusiewicz/nordvpn-client                
 
 Now just create the second container _without_ the `-p` parameter, only inlcude the `--net=container:vpn`, the port should be declare in the vpn container.
 
