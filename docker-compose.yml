@@ -1,14 +1,16 @@
-version: "3.1"
+version: '3.5'
 
 services:
   vpn:
     build: .
     image: mkarpusiewicz/nordvpn-client:local
     restart: unless-stopped
+    networks: 
+      - vpn
     cap_add:
       - NET_ADMIN
     devices:
-      - "/dev/net/tun"
+      - /dev/net/tun
     stdin_open: true
     tty: true
     secrets:
@@ -17,6 +19,10 @@ services:
       COUNTRY: Poland
       PROTOCOL: openvpn_udp
 
+networks: 
+  vpn:
+    driver: bridge
+
 secrets:
   nordvpn-auth:
-    external: true
+    file: .nordvpn-auth

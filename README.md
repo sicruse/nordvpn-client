@@ -103,8 +103,8 @@ For multiple services (non-existant 'foo' used as an example):
  * `PROTOCOL` - Specify OpenVPN protocol. Only one protocol can be selected. Allowed protocols are:
    * `openvpn_udp`
    * `openvpn_tcp`
- * `USER`     - User for NordVPN account.
- * `PASS`     - Password for NordVPN account.
+ * `VPN_USER`     - User for NordVPN account.
+ * `VPN_PASS`     - Password for NordVPN account.
  * `NETWORK`  - CIDR network (IE 192.168.1.0/24), add a route to allows replies once the VPN is up.
  * `NETWORK6` - CIDR IPv6 network (IE fe00:d34d:b33f::/64), add a route to allows replies once the VPN is up.
 
