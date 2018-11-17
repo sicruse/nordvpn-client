@@ -18,5 +18,6 @@ HEALTHCHECK --start-period=30s --timeout=15s --interval=60s --retries=2 \
             CMD curl -fL 'https://api.ipify.org' || exit 1
 
 COPY nordvpn.sh /usr/bin
+RUN ["chmod", "+x", "/usr/bin/nordvpn.sh"]
 
 ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/nordvpn.sh"]
